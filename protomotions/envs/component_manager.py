@@ -24,6 +24,7 @@ This module handles:
 """
 
 import logging
+import os
 import sys
 from typing import Any, Callable, Dict, TYPE_CHECKING
 
@@ -38,6 +39,7 @@ if TYPE_CHECKING:
 
 # torch.compile unavailable on Python 3.8 (IsaacGym)
 TORCH_COMPILE_AVAILABLE = hasattr(torch, "compile") and sys.version_info >= (3, 9)
+TORCH_COMPILE_DISABLED_BY_ENV = os.getenv("PROTOMOTIONS_DISABLE_TORCH_COMPILE", "0") == "1"
 
 
 class ComponentManager:
@@ -157,7 +159,7 @@ class ComponentManager:
         cache_key = f"{name}_func"
         if cache_key not in self._compiled:
             fn = router.compute_func
-            if not TORCH_COMPILE_AVAILABLE:
+            if not TORCH_COMPILE_AVAILABLE or TORCH_COMPILE_DISABLED_BY_ENV:
                 self._compiled[cache_key] = fn
             else:
                 try:

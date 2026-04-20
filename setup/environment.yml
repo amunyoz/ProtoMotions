@@ -1,0 +1,9 @@
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip<26
+  - setuptools=69.5.1
+  - wheel
+  - importlib_metadata
